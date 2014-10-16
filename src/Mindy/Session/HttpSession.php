@@ -25,7 +25,7 @@ namespace Mindy\Session;
 use ArrayAccess;
 use Countable;
 use IteratorAggregate;
-use Mindy\Base\Exception\Exception;
+use Mindy\Exception\Exception;
 use Mindy\Base\Mindy;
 use Mindy\Helper\Traits\Accessors;
 use Mindy\Helper\Traits\Configurator;
@@ -153,7 +153,7 @@ class HttpSession implements IteratorAggregate, ArrayAccess, Countable
 
         session_start();
         if (YII_DEBUG && session_id() == '') {
-            $message = Mindy::t('yii', 'Failed to start session.');
+            $message = Mindy::t('base', 'Failed to start session.');
             if (function_exists('error_get_last')) {
                 $error = error_get_last();
                 if (isset($error['message'])) {
@@ -253,7 +253,7 @@ class HttpSession implements IteratorAggregate, ArrayAccess, Countable
         if (is_dir($value)) {
             session_save_path($value);
         } else {
-            throw new Exception(Mindy::t('yii', 'CHttpSession.savePath "{path}" is not a valid directory.', [
+            throw new Exception(Mindy::t('base', 'CHttpSession.savePath "{path}" is not a valid directory.', [
                 '{path}' => $value
             ]));
         }
@@ -317,7 +317,7 @@ class HttpSession implements IteratorAggregate, ArrayAccess, Countable
             ini_set('session.use_cookies', '1');
             ini_set('session.use_only_cookies', '1');
         } else {
-            throw new Exception(Mindy::t('yii', 'CHttpSession.cookieMode can only be "none", "allow" or "only".'));
+            throw new Exception(Mindy::t('base', 'CHttpSession.cookieMode can only be "none", "allow" or "only".'));
         }
     }
 
@@ -340,7 +340,7 @@ class HttpSession implements IteratorAggregate, ArrayAccess, Countable
             ini_set('session.gc_probability', floor($value * 21474836.47));
             ini_set('session.gc_divisor', 2147483647);
         } else {
-            throw new Exception(Mindy::t('yii', 'CHttpSession.gcProbability "{value}" is invalid. It must be a float between 0 and 100.', ['{value}' => $value]));
+            throw new Exception(Mindy::t('base', 'CHttpSession.gcProbability "{value}" is invalid. It must be a float between 0 and 100.', ['{value}' => $value]));
         }
     }
 
