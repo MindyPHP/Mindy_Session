@@ -152,7 +152,7 @@ class HttpSession implements IteratorAggregate, ArrayAccess, Countable
         }
 
         session_start();
-        if (YII_DEBUG && session_id() == '') {
+        if (MINDY_DEBUG && session_id() == '') {
             $message = Mindy::t('base', 'Failed to start session.');
             if (function_exists('error_get_last')) {
                 $error = error_get_last();
