@@ -1,27 +1,7 @@
 <?php
-/**
- *
- *
- * All rights reserved.
- *
- * @author Falaleev Maxim
- * @email max@studio107.ru
- * @version 1.0
- * @company Studio107
- * @site http://studio107.ru
- * @date 10/06/14.06.2014 20:03
- */
 
 namespace Mindy\Session;
 
-/**
- * CHttpSession class file.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @link http://www.yiiframework.com/
- * @copyright 2008-2013 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
 use ArrayAccess;
 use Countable;
 use IteratorAggregate;
@@ -88,7 +68,7 @@ use Mindy\Helper\Traits\Configurator;
  * @property array $keys The list of session variable names.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
- * @package system.web
+ * @package Mindy\Session
  * @since 1.0
  */
 class HttpSession implements IteratorAggregate, ArrayAccess, Countable
