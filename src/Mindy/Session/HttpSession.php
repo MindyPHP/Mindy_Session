@@ -5,10 +5,11 @@ namespace Mindy\Session;
 use ArrayAccess;
 use Countable;
 use IteratorAggregate;
-use Mindy\Exception\Exception;
 use Mindy\Base\Mindy;
+use Mindy\Exception\Exception;
 use Mindy\Helper\Traits\Accessors;
 use Mindy\Helper\Traits\Configurator;
+use SessionHandlerInterface;
 
 /**
  * CHttpSession provides session-level data management and the related configurations.
@@ -89,7 +90,6 @@ class HttpSession implements IteratorAggregate, ArrayAccess, Countable
         if ($this->autoStart) {
             $this->open();
         }
-        register_shutdown_function([$this, 'close']);
     }
 
     public function getId()
@@ -113,26 +113,30 @@ class HttpSession implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Starts the session if it has not started yet.
+     *
+     * Also you can use:
+     * $success = session_set_save_handler(
+     *      [$this, 'openSession'],
+     *      [$this, 'closeSession'],
+     *      [$this, 'readSession'],
+     *      [$this, 'writeSession'],
+     *      [$this, 'destroySession'],
+     *      [$this, 'gcSession']
+     * );
      */
     public function open()
     {
-        if ($handler = $this->getCustomHandler()) {
-//            $success = session_set_save_handler(
-//                [$this, 'openSession'],
-//                [$this, 'closeSession'],
-//                [$this, 'readSession'],
-//                [$this, 'writeSession'],
-//                [$this, 'destroySession'],
-//                [$this, 'gcSession']
-//            );
-
-            if(session_set_save_handler($handler, true) === false) {
+        $handler = $this->getCustomHandler();
+        if ($handler instanceof SessionHandlerInterface) {
+            if (session_set_save_handler($handler, true) === false) {
                 throw new Exception("Failed to set custom session handlers");
             }
+        } else {
+            register_shutdown_function([$this, 'close']);
         }
 
         session_start();
-        if (MINDY_DEBUG && session_id() == '') {
+        if (MINDY_DEBUG && $this->getId() == '') {
             $message = Mindy::t('base', 'Failed to start session.');
             if (function_exists('error_get_last')) {
                 $error = error_get_last();
@@ -140,7 +144,7 @@ class HttpSession implements IteratorAggregate, ArrayAccess, Countable
                     $message = $error['message'];
                 }
             }
-            Mindy::app()->logger->warning($message, 'system.web.CHttpSession');
+            Mindy::app()->logger->error($message, ['method' => __METHOD__, 'class' => __CLASS__]);
         }
     }
 
@@ -149,7 +153,7 @@ class HttpSession implements IteratorAggregate, ArrayAccess, Countable
      */
     public function close()
     {
-        if ($this->getId() !== '') {
+        if ($this->getIsStarted()) {
             session_write_close();
         }
     }
