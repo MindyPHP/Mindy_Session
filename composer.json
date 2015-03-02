@@ -2,7 +2,7 @@
     "name": "mindy/session",
     "homepage": "https://github.com/studio107/Mindy_Session",
     "license": "MIT",
-    "version": "0.1",
+    "version": "0.2",
     "autoload": {
         "psr-4": {
             "Mindy\\Session\\": "src/Mindy/Session"
