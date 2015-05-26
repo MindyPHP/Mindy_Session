@@ -80,6 +80,10 @@ class HttpSession implements IteratorAggregate, ArrayAccess, Countable
      * @var boolean whether the session should be automatically started when the session application component is initialized, defaults to true.
      */
     public $autoStart = true;
+    /**
+     * @var string
+     */
+    public $cacheLimiter = "public";
 
     /**
      * Initializes the application component.
@@ -134,6 +138,8 @@ class HttpSession implements IteratorAggregate, ArrayAccess, Countable
         } else {
             register_shutdown_function([$this, 'close']);
         }
+
+        session_cache_limiter($this->cacheLimiter);
 
         session_start();
         if (MINDY_DEBUG && $this->getId() == '') {
